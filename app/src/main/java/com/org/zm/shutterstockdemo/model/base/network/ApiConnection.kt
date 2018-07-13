@@ -1,5 +1,5 @@
 /*
- * Copyright (c) $Year. All Code CopyRights reserved For Zeinab Mohamed Abdelmawla
+ * Copyright (c) 2018. All Code CopyRights reserved For Zeinab Mohamed Abdelmawla
  *
  */
 
@@ -9,9 +9,9 @@ package com.org.zm.shutterstockdemo.model.base.network
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/*
- * Created by
- *
+/**
+ * cloud connection util
+ *  @author Zeinab Abdelmawla
  */
 object ApiConnection {
 
