@@ -1,5 +1,5 @@
 /*
- * Copyright (c) $Year. All Code CopyRights reserved For Zeinab Mohamed Abdelmawla
+ * Copyright (c) 2018. All Code CopyRights reserved For Zeinab Mohamed Abdelmawla
  *
  */
 
@@ -10,6 +10,7 @@ import android.content.Context
 
 /**
  * Interface representing a View that will use to load data.
+ *  @author Zeinab Abdelmawla
  */
 interface LoadDataView : LifecycleOwner {
 
@@ -29,13 +30,12 @@ interface LoadDataView : LifecycleOwner {
      *
      * @param message
      */
-    fun showRetry(message: String) {
-    }
+    fun showRetry(message: String)
 
     /**
      * Hide a retry view shown if there was an error when retrieving data.
      */
-    fun hideRetry() {}
+    fun hideRetry()
 
     /**
      * Show an error message

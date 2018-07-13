@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018. All Code CopyRights reserved For Zeinab Mohamed Abdelmawla
+ *
+ */
+
 package com.org.zm.shutterstockdemo.model.base
 
 import io.reactivex.Observable
@@ -8,6 +13,10 @@ import io.reactivex.functions.Function
 import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
 
+/**
+ * Handle all data calls network or db
+ *  @author Zeinab Abdelmawla
+ */
 
 abstract class BaseRepository {
 
