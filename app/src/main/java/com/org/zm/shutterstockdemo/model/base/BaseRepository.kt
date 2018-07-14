@@ -5,13 +5,15 @@
 
 package com.org.zm.shutterstockdemo.model.base
 
+import android.util.Log
 import io.reactivex.Observable
-import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import io.reactivex.functions.Function
 import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
+
 
 /**
  * Handle all data calls network or db
@@ -20,6 +22,9 @@ import io.reactivex.schedulers.Schedulers
 
 abstract class BaseRepository {
 
+    protected val TAG: String = BaseRepository::class.java.name
+
+
     /**
      * @property singleObservable
      * @property fillerPredictor
@@ -27,10 +32,13 @@ abstract class BaseRepository {
      * @property observer
      * @param R the observable items
      */
-    protected fun <R : BaseResponse> execute(singleObservable: Observable<R>,
-                                             fillerPredictor: Predicate<R>?,
-                                             consumer: Consumer<R>?,
-                                             observer: Observer<R>) {
+
+    protected open fun <R : BaseResponse, O> execute(singleObservable: Observable<R>,
+                                                     fillerPredictor: Predicate<R>?,
+                                                     mapper: Function<R, O>?,
+                                                     doOnNextConsumer: Consumer<O>?,
+                                                     onNextConsumer: Consumer<O>,
+                                                     dataCallbackListener: DataCallbackListener<*>) {
 
         var updatedObservable = singleObservable.subscribeOn(Schedulers.io())
         updatedObservable = updatedObservable.observeOn(AndroidSchedulers.mainThread())
@@ -38,30 +46,21 @@ abstract class BaseRepository {
         fillerPredictor?.let {
             updatedObservable = updatedObservable.filter(it)
         }
-        consumer?.let {
-            updatedObservable = updatedObservable.doOnNext(consumer)
-        }
-        updatedObservable.subscribe(observer)
 
+        var mappedUpdatedObservable = updatedObservable.map(mapper)
+        doOnNextConsumer?.let { mappedUpdatedObservable.doOnNext(doOnNextConsumer) }
+        mappedUpdatedObservable.subscribe(onNextConsumer, Consumer { e ->
+
+            Log.d(TAG, "onError : ${e.message}")
+
+            dataCallbackListener.onError(ErrorManager.getErrorModel(e))
+        }, Action {
+            Log.d(TAG, "onComplete")
+        }, Consumer { disposal ->
+            Log.d(TAG, "onSubscribe")
+
+        })
     }
 
-    protected fun <R :  BaseResponse, O> execute(singleObservable: Observable<R>,
-                                                fillerPredictor: Predicate<R>?,
-                                                mapper: Function<R, O>?,
-                                                consumer: Consumer<R>?,
-                                                observer: Observer<O>) {
-
-        var updatedObservable = singleObservable.subscribeOn(Schedulers.io())
-        updatedObservable = updatedObservable.observeOn(AndroidSchedulers.mainThread())
-
-        fillerPredictor?.let {
-            updatedObservable = updatedObservable.filter(it)
-        }
-        mapper.let {
-            var mappedUpdatedObservable=  updatedObservable.map(it)
-            consumer?.let { updatedObservable.doOnNext(consumer) }
-             mappedUpdatedObservable.subscribe(observer)
-        }
-
-    }
 }
+

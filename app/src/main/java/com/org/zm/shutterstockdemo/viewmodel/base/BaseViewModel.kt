@@ -16,10 +16,10 @@ abstract class BaseViewModel< V : LoadDataView> : ViewModel() {
     /**
      * initialize all needed  repos to update ui
      */
-    abstract fun initRepo()
+    abstract fun initRepos()
 
     init {
-        initRepo()
+        initRepos()
     }
 
     fun attachView(view: V) {
