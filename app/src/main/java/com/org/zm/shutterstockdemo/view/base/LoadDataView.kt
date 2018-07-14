@@ -7,6 +7,7 @@ package com.org.zm.shutterstockdemo.view.base
 
 import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
+import com.org.zm.shutterstockdemo.model.base.AppErrorModel
 
 /**
  * Interface representing a View that will use to load data.
@@ -42,7 +43,7 @@ interface LoadDataView : LifecycleOwner {
      *
      * @param message A string representing an error.
      */
-    fun showError(message: String)
+    fun showError(errorModel : AppErrorModel)
 
     /**
      * Get a [Context].
